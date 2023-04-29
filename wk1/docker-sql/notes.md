@@ -27,4 +27,8 @@ Count lines in a file (not sure if this works for CSV)
 wc -l <file>
 ```
 
-## Steps in loading
+## Steps in loading data to posgres container
+- create a postgres container image
+- start the posgres server
+    - map data volume to local drive to persist data
+- load data from a python script into newly created schema
