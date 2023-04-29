@@ -16,3 +16,15 @@ docker run -it test:pandas <some_argument>
 ```
 
 *Use double quotes with JSON(?) arrays in docker file*
+
+Getting the first 100 rows of a CSV:
+```
+head -n 100 <file>
+```
+
+Count lines in a file (not sure if this works for CSV)
+```
+wc -l <file>
+```
+
+## Steps in loading
