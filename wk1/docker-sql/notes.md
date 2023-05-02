@@ -111,4 +111,9 @@ python parquet_processing.py \
 
 ```
 
-TODO: complete dockerization of python script
+Build the container that contains the python parquet script:
+```
+docker build -t taxi-ingest:v001 .
+```
+
+TODO: drop table and run docker container
