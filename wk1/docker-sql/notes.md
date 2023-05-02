@@ -86,3 +86,9 @@ dpage/pgadmin4
 ```
 
 *Remember to use the database --name flag attribute as the host name in pg admin to be able to connect!*
+
+# Dockerizing the Ingestion Script
+Converting jupyter notebooks to python scripts
+```
+jupyter nbconvert --to=script Reading_NY_TAXI_Parquet.ipynb
+```
