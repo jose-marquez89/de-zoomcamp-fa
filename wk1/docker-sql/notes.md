@@ -92,3 +92,23 @@ Converting jupyter notebooks to python scripts
 ```
 jupyter nbconvert --to=script Reading_NY_TAXI_Parquet.ipynb
 ```
+
+## Using argparse
+Typically, it's much better practice to put your passwords in environment variables or password stores etc. but this is how this particular exercise was carried out for tempo-de-learno:
+```
+
+# see the parquet_processing.py script
+URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+
+python parquet_processing.py \
+--user=root \
+--password=root \
+--host=localhost \
+--port=5432 \
+--db=ny_taxi \
+--table_name=yellow_taxi_trips \
+--url=${URL}
+
+```
+
+TODO: complete dockerization of python script
