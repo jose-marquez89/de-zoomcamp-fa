@@ -4,6 +4,7 @@
 import argparse
 import os
 import pandas as pd
+import pyarrow.parquet as pq
 
 from sqlalchemy import create_engine
 
@@ -15,7 +16,7 @@ def load_data(params):
     db = params.db
     table_name = params.table_name 
     url = params.url
-    parquet_fname = "data/pq_out.parquet"
+    parquet_fname = "pq_out.parquet"
 
     os.system(f"wget {url} -O {parquet_fname}")
 
@@ -25,8 +26,22 @@ def load_data(params):
     pd.io.sql.get_schema(df, name=table_name, con=engine)
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists="replace")
+    print(f"Schema created, appending table data ({df.shape[0]} rows)...")
+    print(f"Other stats {df['airport_fee'].mean()}")
 
-    df.to_sql(name=table_name, con=engine, if_exists="append")
+    del df
+
+    # probably not the most memory-efficient way to do this
+    pfile = pq.ParquetFile(parquet_fname)
+    bcount = 1
+
+    for batch in pfile.iter_batches():
+        print(f"Working on batch {bcount}")
+        bcount += 1
+        bdf = batch.to_pandas()
+        bdf.to_sql(name=table_name, con=engine, if_exists="append")
+
+    print(f"Completed table data loaded to {table_name}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest parquet data into postgres db")
