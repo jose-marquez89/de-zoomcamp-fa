@@ -136,3 +136,10 @@ taxi-ingest:v001 \
 --table_name=yellow_taxi_trips \
 --url=${URL}
 ```
+
+# Using Docker Compose
+This is convenient way to run related services with one config file
+Created the .yaml file in this directory and ran `docker compose up` from within the dir
+
+**Other Stuff**
+- The "proper" way to shut the machine down is 'docker compose down' (assuming from the directory it was created)
