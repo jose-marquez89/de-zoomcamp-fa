@@ -16,7 +16,7 @@ def load_data(params):
     db = params.db
     table_name = params.table_name 
     url = params.url
-    parquet_fname = "pq_out.parquet"
+    parquet_fname = "data/pq_out.parquet"
 
     os.system(f"wget {url} -O {parquet_fname}")
 
