@@ -165,7 +165,6 @@ WHERE
 LIMIT 100;
 ```
 
-TODO: Some other methods for joins
 Using `JOIN` instead of `WHERE` clause
 
 ```SQL
