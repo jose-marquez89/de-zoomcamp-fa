@@ -143,3 +143,29 @@ Created the .yaml file in this directory and ran `docker compose up` from within
 
 **Other Stuff**
 - The "proper" way to shut the machine down is 'docker compose down' (assuming from the directory it was created)
+
+
+# SQL Refresher
+One way of doing joins:
+
+```SQL
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zp."Borough", ' / ', zp."Borough") AS pu_location,
+    CONCAT(zd."Borough", ' / ', zd."Borough") AS do_location
+FROM
+    yellow_taxi_trips t,
+    zones zp,
+    zones zd,
+WHERE
+    t."PULocationID" = zp."LocationID" AND
+    t."DOLocationID" = zd."LocationID"
+LIMIT 100;
+```
+
+TODO: Some other methods for joins
+
+
+```
