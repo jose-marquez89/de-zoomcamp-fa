@@ -166,6 +166,40 @@ LIMIT 100;
 ```
 
 TODO: Some other methods for joins
+Using `JOIN` instead of `WHERE` clause
 
-
+```SQL
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zp."Borough", ' / ', zp."Borough") AS pu_location,
+    CONCAT(zd."Borough", ' / ', zd."Borough") AS do_location
+FROM
+    yellow_taxi_trips t
+JOIN zones zp
+	ON t."PULocationID" = zp."LocationID"
+JOIN zones zd
+    ON t."DOLocationID" = zd."LocationID"
+LIMIT 100;
 ```
+
+A group by feature (in postgres) that I was not aware of:
+```SQL
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) as "day",
+    "DOLocationID",
+    COUNT(1) AS "count",
+    MAX(total_amount),
+    MAX(passenger_count)
+FROM
+    yellow_taxi_trips t
+GROUP BY
+    -- looks like you can group by list indices
+    -- but not really sure that this is a great practice
+    1, 2  
+ORDER BY
+    "day" ASC,
+    "DOLocationID" ASC
+```
+
