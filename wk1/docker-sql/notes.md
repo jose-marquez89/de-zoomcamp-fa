@@ -114,13 +114,6 @@ python parquet_processing.py \
 Build the container that contains the python parquet script:
 ```
 docker build -t taxi-ingest:v001 .
---user=root \
---password=root \
---host=localhost \
---port=5432 \
---db=ny_taxi \
---table_name=yellow_taxi_trips \
---url=${URL}
 ```
 
 Running the newly built container:
