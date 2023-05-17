@@ -1,3 +1,4 @@
 denv/
 *data/
 .ipynb_checkpoints
+.tfstate
