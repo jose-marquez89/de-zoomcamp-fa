@@ -40,5 +40,4 @@ The above step allows your CLI to interact with the cloud environment. This is O
 - the command `ls -ltr` gives you permissions, users and timestamps for files in a directory
     - you can specify a certain subset of files like this `ls -ltr ~/Downloads/global-maxim-*`
 
-
-TODO: do stuff with terraform client + GCP
+TODO: build gcp resource with new terraform files (check files for accuracy first)
