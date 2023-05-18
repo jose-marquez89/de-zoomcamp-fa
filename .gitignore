@@ -1,4 +1,7 @@
 denv/
 *data/
 .ipynb_checkpoints
-.tfstate
+
+# terraform
+*.tfstate
+.terraform/
