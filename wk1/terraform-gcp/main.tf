@@ -1,8 +1,10 @@
 terraform {
     required_version = ">= 1.0"
     backend "local" {} # you can change this to your cloud provider if you want to preserve state online
-    google = {
-        source = "hashicorp/google"
+    required_providers {
+      google = {
+          source = "hashicorp/google"
+      }
     }
 }
 
@@ -13,7 +15,7 @@ provider "google" {
 }
 
 # data lake bucket
-resource "google_storage_bucket" "data-lake-bucket" {
+resource "google_storage_bucket" "data_lake_bucket" {
     name = "${local.data_lake_bucket}_${var.project}"
     location = var.region
 
@@ -34,8 +36,9 @@ resource "google_storage_bucket" "data-lake-bucket" {
         age = 30
       }
 
-      force_destroy = true
     }
+    
+    force_destroy = true
 }
 
 # data warehouse
