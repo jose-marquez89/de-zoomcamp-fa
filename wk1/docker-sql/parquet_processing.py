@@ -27,7 +27,6 @@ def load_data(params):
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists="replace")
     print(f"Schema created, appending table data ({df.shape[0]} rows)...")
-    print(f"Other stats {df['airport_fee'].mean()}")
 
     del df
 
