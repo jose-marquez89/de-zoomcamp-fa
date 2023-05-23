@@ -134,4 +134,18 @@ Alternatively you can put `SqlAlchemyConnector.load("block-name")` into a variab
 These were taken during prefect walkthrough:
 - you can't run a task (`@task` decorated functions) within other tasks
 
-TODO: finish prefect walkthrough
+### Prefect to GCP ETL
+Steps for using blocks:
+1. register blocks
+2. select a block for use and name it
+3. add credentials from a service account with the appropriate permissions
+
+See *etl_web_to_gcp.py*
+
+## Registering a block
+Run the following to register a block (not sure what this means or what it is for though)
+
+Seems to display a new set of registered blocks.
+```shell
+prefect block register -m prefect_gcp
+```
