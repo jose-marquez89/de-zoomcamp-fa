@@ -45,3 +45,93 @@
 - GCP: cloud storage
 - AWS: S3
 - Azure: Azure Blob
+
+# Intro to Workflow Orchestration
+- workflow orchestration allows you to turn any code into a workflow that you can
+    - schedule
+    - run
+    - observe
+- basically this is the same idea behind SSIS
+- think of it as a well designed and robust delivery system
+- all about dataflow and reliable execution
+    - should respect your privacy
+    - should give you some insight into how things went
+        - think tracking (logging, errors etc)
+- a good workflow orchestration tool should allow you to orchestrate a wide range of data processes and tools
+- existing tools
+    - prefect
+    - airflow
+    - luigi
+    - cron
+    - dagster
+    - a few others
+
+# Intro to Prefect concepts
+We're going to create a new ingest script.
+
+```bash
+export URL="https://d37ci6vzurychx.cloudfront.net/trip-data/fhv_tripdata_2023-01.parquet"
+
+python pq_process_simple.py \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=for_hire_vehicle_trips \
+    --url=${URL}
+```
+
+## Parameterization and subflows
+I didn't do this within `pq_process_simple.py` because it didn't make sense with the argument parser, but here are some notes about this nonetheless:
+
+When you do the following, you'll see that a new subflow will be announced in stdio.
+
+```python
+@flow(name="subflow", log_prints=True)
+def log_subflow(table_name: str):
+    print(f"Logging subflow for: {table_name}")
+
+@flow(name="Ingest Flow")
+def main_flow(table_name: str):
+    # code
+    # code
+
+    # here we call the subflow
+    log_subflow(table_name)
+
+    # code
+    # code
+```
+
+## Running the Orion UI
+Remember to set the URL for the UI:
+```shell
+prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
+```
+
+## Blocks
+Blocks securely store credentials and configuration to easily manage connections to external systems.
+
+Blocks enable storage configuration. Provides a central location. Kinda like modular connectors. Block names are immutable.
+- blocks can be pip installed from something like a repository of connectors
+- you can use these within your code instead of things like postgres connection strings
+- you set the parameters in the UI
+    - post, dbname, etc (all the stuff you would normally use in a connection string)
+
+Example:
+```python
+from prefect_sqlalchemy import SqlAlchemyConnector
+
+with SqlAlchemyConnector.load("<name-of-your-block>") as database_block:
+    df.head(n=0).to_sql(name=table_name, con=engine, if_exists="replace")
+    df.to_sql(name=table_name, con=engine, if_exists="append")
+```
+
+Alternatively you can put `SqlAlchemyConnector.load("block-name")` into a variable and use that after the `with` keyword.
+
+## Some notes to self
+These were taken during prefect walkthrough:
+- you can't run a task (`@task` decorated functions) within other tasks
+
+TODO: finish prefect walkthrough
