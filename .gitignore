@@ -5,3 +5,6 @@ denv/
 # terraform
 *.tfstate
 .terraform/
+
+# prefect
+.prefectignore
