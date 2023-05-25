@@ -137,7 +137,7 @@ Alternatively you can put `SqlAlchemyConnector.load("block-name")` into a variab
 These were taken during prefect walkthrough:
 - you can't run a task (`@task` decorated functions) within other tasks
 
-### Prefect to GCP ETL
+# Prefect to GCP ETL
 Steps for using blocks:
 1. register blocks
 2. select a block for use and name it
@@ -152,3 +152,10 @@ Seems to display a new set of registered blocks.
 ```shell
 prefect block register -m prefect_gcp
 ```
+
+# Prefect GCS to BQ
+Steps to create a dataset in BQ and add data
+1. hit the "ADD+" button
+2. create a new dataset and give it a unique name
+3. give the incoming data a table name 
+4. if there's no partitioning to be done, go ahead and create the table
