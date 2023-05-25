@@ -159,3 +159,54 @@ Steps to create a dataset in BQ and add data
 2. create a new dataset and give it a unique name
 3. give the incoming data a table name 
 4. if there's no partitioning to be done, go ahead and create the table
+
+# Prefect Deployments
+- an encapsulation of a flow
+    - allows scheduling and triggering via an API
+- stores metadata
+    - where the flow code lives
+    - how the flow should be run
+- think of it as a configuration for managing flows
+    - CLI
+    - UI
+    - API
+
+## Building deployments
+The following command will build a deployment and give it a name, make sure to include an entrypoint:
+```shell
+prefect deployment build ./parameterized_flow.py:etl_parent_flow -n "Parameterized_ETL"
+```
+
+This will build a .yaml file in the directory that you run it in.
+```yaml
+name: Parameterized_ETL
+description: null
+version: 1998871b52e2f0325aa49b4d59965cc7
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+tags: []
+parameters: {"color": "yellow", "months": [1, 2, 3], "year": 2021}
+
+# etc ...
+```
+
+Then you can *apply* the deployment configuration (send yaml config to API) like so:
+```shell
+prefect deployment apply etl_parent_flow-deployment.yaml
+```
+
+When you go to the UI to view the run and start a *Quick Run*, this will schedule a run but **there will be no agent to pick up the run, you need to do something about this**.
+
+### Work Queues and Agents
+- Agent: very lightweight python process that lives in your execution environment
+- Work Queue: this is what the agent pulls its jobs from
+    - it now seems to be called *Work Pools* in the UI
+
+You can start a default agent from the UI (I think? go to *Work Pools > default-agent-pool > default*) or with the following command:
+```shell
+prefect agent start --work-queue "default"
+```
+
+## Notifications
+Create them in the UI:
