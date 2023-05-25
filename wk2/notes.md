@@ -110,6 +110,9 @@ Remember to set the URL for the UI:
 prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
 ```
 
+To run: `prefect orion start`
+
+
 ## Blocks
 Blocks securely store credentials and configuration to easily manage connections to external systems.
 
