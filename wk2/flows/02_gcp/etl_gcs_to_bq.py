@@ -25,6 +25,16 @@ def transform(path: Path) -> pd.DataFrame:
 
     return df
 
+@task()
+def write_bq(df: pd.DataFrame) -> None:
+    """Write dataframe to big query"""
+    gcp_creds_block = GcpCredentials.load("dez-prefect-gcp-creds")
+
+    df.to_gbq(destination_table='de_zc_prefect_20230525.rides_example', 
+              project_id='de-zc-i',
+              credentials=gcp_creds_block.get_credentials_from_service_account(),
+              chunksize=100_000, if_exists="append")
+
 @flow()
 def etl_gcs_to_bq():
     """Main ETL to load data into Big Query"""
@@ -34,6 +44,7 @@ def etl_gcs_to_bq():
 
     path = extract_from_gcs(color, year, month)
     df = transform(path)
+    write_bq(df)
 
 if __name__ == "__main__":
     etl_gcs_to_bq()
