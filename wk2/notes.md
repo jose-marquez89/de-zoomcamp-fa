@@ -208,5 +208,36 @@ You can start a default agent from the UI (I think? go to *Work Pools > default-
 prefect agent start --work-queue "default"
 ```
 
+From the UI itself (this may be the preferred command circa June 2023)
+```shell
+prefect agent start --pool default-agent-pool --work-queue default
+```
+
 ## Notifications
-Create them in the UI:
+Create them in the UI (main menu)
+
+# Schedules and Docker storage with infrastructure
+- you can view schedules from wherever the deployments are
+- go to flows and go to a flow that has deployments
+    - visit the "Deployments" tab
+    - click on the name of the deployment
+    - from here you can **add a schedule**
+    - can do cron style or regular
+- RRules are a little more complex
+
+## Creating schedules upon deployment creation
+Setting the schedule in the shell command
+```shell
+prefect deployment build flows/03_deployments/parameterized_flow.py:etl_parent_flow -n etl2 --cron "*/5 * * * *" -a
+```
+
+**If you ever need help** `prefect deployment build --help`
+
+*Note: you can also set the schedule after the deployment with* `prefect deployment set-schedule`
+
+## Storing your code in a Docker image
+- create a dockerfile with the prefect image (see dockerfile in 02_gcp)
+- build image with dockerhub username
+- push the image up to dockerhub
+
+TODO: do section where you do something with blocks
