@@ -9,7 +9,11 @@ from prefect.tasks import task_input_hash
 
 # remember that the cache key fn keeps you from having to re-read
 # the dataset more than once if it has already been read
-@task(retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1))
+
+# removed the cache_key_fn part because a recent docker failure 
+# created some issues with prefect cache storage
+# @task(retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(seconds=30))
+@task(retries=3)
 def fetch(dataset_url: str) -> pd.DataFrame:
     """Read data into a pandas df"""
     print(f"Reading file: \n\t{dataset_url}")
