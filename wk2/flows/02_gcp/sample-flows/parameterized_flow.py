@@ -54,8 +54,12 @@ def etl_web_to_gcs(year: int, month: int, color: str) -> None:
     dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{dataset_file}.csv.gz" 
 
     df = fetch(dataset_url)
-    clean_df = clean(df)
-    path = write_local(clean_df, color, dataset_file)
+    if color not in ("green"):
+        clean_df = clean(df)
+        path = write_local(clean_df, color, dataset_file)
+    else:
+        path = write_local(df, color, dataset_file)
+
     write_gcs(path)
 
 @flow()
