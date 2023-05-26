@@ -245,6 +245,17 @@ prefect deployment build flows/03_deployments/parameterized_flow.py:etl_parent_f
         - removes container upon completion
     - you can also use python code to create your docker block (or any block for that matter)
 
+### Building and pushing a Docker image to your DockerHub
+```shell
+docker image build -t username/repository:tag path/to/dockerfile
+```
+
+```shell
+docker image push username/repository:tag
+```
+
+The image can then be used in a prefect block
+
 ### Prefect profiles
 You can specify an endpoint at a specific URL 
 - Do this if you're going to run from the cloud or something else other than locally
