@@ -1,0 +1,66 @@
+###
+### A complete description of a Prefect Deployment for flow 'parent-bq-flow'
+###
+name: hw_bq_dep
+description: null
+version: 4c18e9cffb758ae05c4bd1bab0b88523
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: default-agent-pool
+tags: []
+parameters:
+  color: yellow
+  months:
+  - 1
+  - 2
+  year: 2019
+schedule: null
+is_schedule_active: true
+infra_overrides: {}
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: parent-bq-flow
+manifest_path: null
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  _block_document_id: dba60dae-a171-4671-a045-88e0386da518
+  _block_document_name: anonymous-1d71f769-59c9-48fd-b189-e1c05b04e0db
+  _is_anonymous: true
+  block_type_slug: process
+  _block_type_slug: process
+storage: null
+path: /home/jose/Documents/projects/de-zoomcamp-fa/wk2/flows/02_gcp
+entrypoint: parameterized_to_bq.py:parent_bq_flow
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    year:
+      title: year
+      default: 2021
+      position: 0
+      type: integer
+    months:
+      title: months
+      default:
+      - 1
+      position: 1
+      type: array
+      items:
+        type: integer
+    color:
+      title: color
+      default: green
+      position: 2
+      type: string
+  required: null
+  definitions: null
+timestamp: '2023-05-26T15:59:26.827440+00:00'
