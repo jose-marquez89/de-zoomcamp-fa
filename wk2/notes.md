@@ -239,5 +239,23 @@ prefect deployment build flows/03_deployments/parameterized_flow.py:etl_parent_f
 - create a dockerfile with the prefect image (see dockerfile in 02_gcp)
 - build image with dockerhub username
 - push the image up to dockerhub
+- create a docker container block
+    - set ImagePullPolicy to ALWAYS
+    - you can set AutoRemove to true
+        - removes container upon completion
+    - you can also use python code to create your docker block (or any block for that matter)
 
-TODO: do section where you do something with blocks
+### Prefect profiles
+You can specify an endpoint at a specific URL 
+- Do this if you're going to run from the cloud or something else other than locally
+
+### Running deployments from the command line
+The `-p` flag specifies a parameter, this can be done after deploying via code (see *docker_deploy.py*)
+```shell
+prefect deployment run etl-parent-flow/docker-flow -p "months=[2, 3, 4]"
+```
+# Other Prefect Resources
+You can access prefect docs [here](https://docs.prefect.io)
+- prefect has a hosted cloud where you can host the orion UI for free
+- [anna-geller github guides](https://github.com/anna-geller)
+- discourse prefect is a great forum
