@@ -132,6 +132,76 @@ if you're filtering by whatever you partitioned and clustered by.*
         - second table will get broadcast to all the nodes
             - I assume this has to do with BQ's distributed nature
 
+# More on BQ partitioning
+You can choose how to partition in big query
+- time-unit column
+- ingestion time?
+    - gonna need more explanation on this
+- integer range partitioning?
+    - again, need more info
+- for time unit or ingestion time
+    - daily
+    - hourly
+    - monthly or yearly
+- partition limit is 4000  
+
+## More on clustering
+Putting this here since these are related
+- apparently the columns you select for clustering are co-located
+- order of columns is important
+    - if you pick A, B, C
+        - columns will be sorted starting on A -> B -> C
+- clustering will improve filter queries and aggregate queries
+- if your table is less than 1 GB clustering may not add any benefit
+    - in fact, clustering may add unecessary overhead
+- you can specify up to 4 clustering columns
+- columns must be top-level and non-repeating
+    - date
+    - bool
+    - geography
+    - int64
+    - numeric
+    - bignumeric
+    - string
+    - timestamp
+    - datetime
+
+## Comparing partitioning and clustering
+- clustering
+    - cost benefit unknown
+        - you just won't know the cost up-front, whereas you *will* with partitioning
+    - better when you need more granularity
+    - queries will commonly use filters or aggregations on multiple columns
+    - use when the cardinality of values is high
+        - paritioning isn't gonna do well with values of more than 4000
+- partitioning
+    - cost benefit is up-front
+    - generally only possible on one column
+    - with partitioning, you only filter or aggregate on one column
+
+### When do you choose clustering over paritioning?
+- when partitions result in a small amount of data per partition
+    - approximately less than 1 GB
+- when partitioning results in a large number of partitions (beyon limit)
+- paritioning results in your mutation operations modifying the majority of partitions in the table frequently
+    - for example, every time you write to the table every hour and many or most partitions are being modified, partitioning may not be the way to go 
+
+### Automatic reclustering
+- as you add data to a clustered table
+    - key ranges can get things written to them that overlap with existing blocks
+    - this messes with the sort property of the table
+- to maintain performance
+    - BQ performs automatic reclustering in the background to put things back in order for sorting
+    - for paritioned tables, clustering is maintained for data within the scope of the partition
+
+# Internals of BigQuery
+TODO: do this section
+
+TODO: do the homework
+
+
+
+
 
 
     
