@@ -195,7 +195,35 @@ Putting this here since these are related
     - for paritioned tables, clustering is maintained for data within the scope of the partition
 
 # Internals of BigQuery
-TODO: do this section
+The main point of this section is not to improve your big query skills; rather we seek to gain insight for a time where we may want to build our own data product.
+- data is stored in something called "collosus"
+    - cheap, columnar storage
+    - separation from compute reduces cost
+- if network is bad, this will result in a high query time
+    - this is a direct result of the separation between compute and storage
+    - this is where the Jupiter network comes into play
+        - allows for the separation of compute and storage internally
+        - this is part of the topic that was being discussed in FDE book (hybrid cloud)
+- another component is the query execution engine: Dremel
+    - divides the query into a tree structure
+    - each node can execute a subset of the query
+- advantage of columnar data storage
+    - this is a speed advantage (not sure about whether its a storage advantage)
+    - record oriented storage like CSV stores things like (id, firstname, lastname, age)
+    - column oriented storage is flipped on it's side (id0, id1, id2), (fn0, fn2, fn2) in a tree structure
+    - better aggregation performance with columnar storage
+- how does dremel work?
+    - there is a hierarchy of processes
+        - root server
+            - receives the query as you write it
+        - mixers
+            - modifies the query
+        - leaf nodes
+            - actually talks to the colossus storage
+        - colossus storage
+            - stores all the data
+        - bq is fast because of the distribution of processing
+
 
 TODO: do the homework
 
