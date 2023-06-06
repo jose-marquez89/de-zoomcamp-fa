@@ -9,3 +9,5 @@ OPTIONS (
   uris = ['gs://dtc_data_lake_de-zc-i/data/green/green_tripdata_20*.parquet']
 );
 ```
+
+TODO: check if everything worked with dbt
