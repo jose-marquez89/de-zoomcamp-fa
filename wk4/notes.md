@@ -94,6 +94,35 @@
   - dbt will transform our data
   - transformed data will feed BI dashboard
 
+## Building first dbt models
+- it's possible to write jinja into your dbt sql files
+  - you can write functions/macros for more help during compilation
+- materialization stragegies
+  - there are 4, table and view are most common
+    - table
+    - view
+    - incremental
+    - ephemeral
+  - if you're an advanced user you can create more
+
+### The FROM clause
+- we essentially create a select list
+  - data is sourced from our connected DW
+- the `FROM` clause, by way of a jinja source macro, will allow us to 
+  - resolve to the correct schema
+  - define source freshness
+- seeds
+  - you can essentially load csv files from dbt
+  - either a single file or a folder
+  - good for data that doesn't change
+  - you essentially load these the same way you would do your transformations (`SELECT` statements) except that you use a `ref[]` to point to the csv file(s)
+- Ref
+  - lets you reference underlying tables and views
+  - can use dbt models or dbt seeds
+  - you don't need a schema or anything, the keyword resolves everything we need
+  - dependencies are built automatically
+
+
 ## Some Misc Notes
 Query I used to create external tables:
 ```sql
