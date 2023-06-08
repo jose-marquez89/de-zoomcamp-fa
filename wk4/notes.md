@@ -107,7 +107,7 @@ OPTIONS (
 ## Content checklist
 - Intro to analytics engineering
 - What is dbt
-- TODO: Starting a dbt (big query + dbt cloud) 
+- Starting a dbt (big query + dbt cloud) 
 - TODO: Development of dbt models
 - TODO: Testing and document dbt models
 - TODO: Deploying a dbt project (bq + dbt cloud)
