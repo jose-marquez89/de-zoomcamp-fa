@@ -59,8 +59,7 @@ def etl_web_to_gcs(year: int, month: int) -> None:
 
 @flow()
 def etl_parent_flow(months: list[int] = [1, 2], 
-                    year: int = 2021,
-                    color: str = "yellow") -> None:
+                    year: int = 2021) -> None:
     
     for month in months:
         print(f"Running month {month}...")
