@@ -103,3 +103,12 @@ OPTIONS (
   uris = ['gs://dtc_data_lake_de-zc-i/data/green/green_tripdata_20*.parquet']
 );
 ```
+
+## Content checklist
+- Intro to analytics engineering
+- What is dbt
+- TODO: Starting a dbt (big query + dbt cloud) 
+- TODO: Development of dbt models
+- TODO: Testing and document dbt models
+- TODO: Deploying a dbt project (bq + dbt cloud)
+- TODO: Visualizing the transformed data
