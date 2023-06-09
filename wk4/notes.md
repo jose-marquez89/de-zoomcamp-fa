@@ -133,11 +133,61 @@ OPTIONS (
 );
 ```
 
+## Development of dbt models
+- defining a source
+  - use the schema.yml to define a source within the models folder
+  - you can later use the schema file to change data sources
+- creating models
+  - write your transformations in sql files from within the models folder
+  - use `dbt run` to create the models in your data warehouse
+    - you can run this with specific flags to point at specific transformations
+  - you can use jinja and source configuration 
+
+### Macros
+- similar to functions
+- can use control structures
+- you can use environment variables
+- you can operate on the results of one query to generate another query
+- macros don't necessarily return an object
+  - they return code for whatever requirement you've written
+- has a DRY benefit (don't repeat yourself)
+- `#` is a comment block while `%` denotes a function
+  - `{# comment #}`
+  - `{% macro macro_name(argument) -%}`
+    - `{%- endmacro %}`
+- macros are written in .sql files in the macros folder
+
+### Packages
+- allows you to bring in macros from other projects
+- like libraries in other programming languages
+- if you add a package to your project, those macros will become available
+- imported in *packages.yml* and brought in by `dbt deps`
+- useful packages can be found at the dbt package hub
+
+### Variables
+- useful to define values that should be used across the project
+- allows us to provide data to models for compilation
+- to use a variable we use the `{{ var('...') }}` function
+- can be defined in two ways
+  - in the dbt_project.yml file
+  - on the command line
+
+### Seeds 
+- meant to be used with smaller files that will not be changing that often
+- so far, the UI does not have an upload feature for the raw files that you might want to put in as seeds
+  - for the meantime, you can either push files to your repository or copy/paste into a file in the UI and create the file
+- run `dbt seed`
+- you can define data types for the seeds in the dbt_project.yml file
+- `dbt seed --full-refresh` drops the table and reloads
+  - you can do this when there is a change to the dataset and you don't want dbt to carry out normal behaviour (append things that change)
+
+
 ## Content checklist
 - Intro to analytics engineering
 - What is dbt
 - Starting a dbt (big query + dbt cloud) 
-- TODO: Development of dbt models
+- Development of dbt models
+  - TODO: find out why fact table build is failing
 - TODO: Testing and document dbt models
 - TODO: Deploying a dbt project (bq + dbt cloud)
 - TODO: Visualizing the transformed data
