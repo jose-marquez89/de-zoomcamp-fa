@@ -181,6 +181,62 @@ OPTIONS (
 - `dbt seed --full-refresh` drops the table and reloads
   - you can do this when there is a change to the dataset and you don't want dbt to carry out normal behaviour (append things that change)
 
+## Testing and documenting the project
+- tests in dbt are essentially a select query
+- your tests get compiled to sql that returns the amount of failing records
+- tests are defined on a colum in the .yml file
+- basic tests provided
+  - unique
+  - not null
+  - accepted values
+  - foreign key to another table
+- you can create your custom tests as queries
+
+### Documentation
+- dbt lets you generate documentation and render it as a website. This includes
+  - project info
+    - model code
+    - dependencies
+    - sources
+    - auto generated dag
+    - descriptions from .yaml file
+  - info about dw
+    - column names and data types
+    - table stats like size and rows
+    - 
+  - docs can be hosted in dbt cloud
+- you can use variables in your documentation (which lives in the .yml)
+- `dbt test` will just run any tests you created
+
+### Documenting models and columns in the .yml
+Below is the basic syntax for model and column documentation in the .yml file.
+Variables can be defined in the .yml file. As you can see below, tests are defined
+in the same .yml file as well.
+```yml
+vars:
+  payment_type_values: [1, 2, 3, 4, 5, 6]
+models:
+  - name: name_of_your_model
+    description: >
+      A long description, perhaps spanning multiple lines
+    columns:
+      - name: your_first_documented_column
+        description: a short description
+        tests:
+          - unique:
+            severity: warn
+          - not_null: 
+            severity: warn
+      - name: your_second_documented_column
+        description: a short description about your second column
+      - name: third_col
+        description: another description
+        tests:
+          - accepted_values:
+            values: "{{ var['payment_type_values'] }}"
+            severity: warn
+            quote: false
+```
 
 ## Content checklist
 - Intro to analytics engineering
