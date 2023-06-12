@@ -238,6 +238,36 @@ models:
             quote: false
 ```
 
+## Deployment (dbt Cloud)
+- what's deployment
+  - it is the process of running the dev models we created in a prod environment
+  - development and deployment allow you to continue building models and testing them without affecting our production environment
+  - deployment environments will have a different schema and ideally, a different user
+  - dev/deploy workflows will usually look something like:
+    - develop in a user branch
+    - open a pr to merge into the main branch
+    - merge the branch into the main branch
+    - run the new models in the prod environment using the main branch
+    - schedule the models 
+
+### Running a dbt project in production
+- dbt cloud has a scheduler that you can use to create jobs in prod
+- a single job can run multiple commands
+- jobs can be triggered manually or on a schedule 
+- each job will keep a log of runs over time
+- each run will have the logs for each command
+- a job can also generate documentation that could be viewed under the run information
+- if dbt source freshness was run, the results can also be viewed at the end of the job 
+
+### Continous integration (CI)
+- the practice of regularly merging development branches into a central repo, after which automated builds and tests are run
+- the goal: reduce adding bugs to production code and maintain a more stable project
+- dbt allows enabling CI on pull requests
+- enabled via webhooks from GitHub or GitLab
+- flow: PR get merged -> webhook is received in dbt cloud -> enqueue of new job run
+- the run of the CI job will be against a temporary schema 
+- no PR will be able to be merged unless the run has been completed successfully
+
 ## Content checklist
 - Intro to analytics engineering
 - What is dbt
