@@ -268,13 +268,6 @@ models:
 - the run of the CI job will be against a temporary schema 
 - no PR will be able to be merged unless the run has been completed successfully
 
-## Content checklist
-- Intro to analytics engineering
-- What is dbt
-- Starting a dbt (big query + dbt cloud) 
-  - fixed build issue, had to do with bad field names and repeated field names
-  - bq doesn't seem to like it when you repeat field names in a select list, even when it comes as a result of a valid join
-- Development of dbt models
-- TODO: Testing and document dbt models
-- TODO: Deploying a dbt project (bq + dbt cloud)
-- TODO: Visualizing the transformed data
+## Visualizing data with Google Data Studio (Looker)
+[Link to my looker report](https://lookerstudio.google.com/s/sOosniFj9D8)
+
