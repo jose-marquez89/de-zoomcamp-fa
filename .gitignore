@@ -2,6 +2,7 @@ denv/
 *data/
 .ipynb_checkpoints
 __pycache__/
+*.parquet
 
 # terraform
 *.tfstate
