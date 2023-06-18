@@ -68,3 +68,62 @@
         - `.show()`, `.take()`, `.head()`, `.write()` are actions
         - `.filter()` or `.where()` is a transformation
 
+## Anatomy of a Spark Cluster
+- when you set up a local cluster, this is when you use `local[*]`
+- flow
+    - you write your code somewhere, like on your computer
+    - the code is submitted to a spark cluster which has a master machine
+        - usually at port 4040
+        - the master will coordinate the processing of a job using available executors
+        - executors pull from a partitioned dataframe
+            - usually live in s3 or cloud storage
+            - also hadoop/hdfs
+                - this used to provide the advantage that the executor would operate on data that was local to it
+                - (for) now the preferred way is to just use cloud storage because the cloud providers have their own internal networks
+
+## Spark implementation of group by
+- a group by is implemented (usually) in three stages, which are visible in the DAG part of the UI
+    - it's assumed that you're using an order by in your query
+    - a preparatory stage
+    - the actual group by
+    - an order by
+- each executor will operate on its respective part of the dataset
+    - filter ->
+    - group by
+    - recall that each executor can only work on one partition at a time
+- the second stage
+    - contains intermediate results
+    - each intermediate result from each executor is combined 
+    - this is where reshuffling occurs
+        - external merge sort occurs here
+        - keyed result rows in each intermediate result are sent to corresponding partitions
+- the external merge sort will combine everything into the final result
+- if you do an order by, you will add a stage that orders everything
+- sidenote regarding the partitions you end up with at the end of a query (which can be seen in the UI)
+    - if your files are small, it's better to repartition to have less partitions
+    - if your files are quite large, many smaller partitions will be ideal
+- try not to do too much reshuffling
+    - it's expensive
+- the tasks column of the UI corresponds to partitions
+
+## Spark implementation of Joins
+- the example join is carried out on the yellow and green datasets
+    - joined on 2 columns and adding 2 from each table for a total of 6 columns
+- how it works
+    - each table is split into sections (partitions maybe?) composed of partitions
+    - a new record type based on keys is created
+        - the key is a representation of a unique column record combination
+    - the keys are used in a reshuffling stage in which records associated with keys are organized into respective partitions
+    - an external merge sort occurs (called SortMergeJoin in the UI)
+        - keys are used to combine records from each table (yellow/green)
+        - record combination behavior will be different depending on what kind of join you've chosen to implement
+- sidenote on writing
+    - it can be good practice to "materialize" (that shouldn't really be in quotes but it's a reference to SQL/RDBMS) results into partitioned files
+    - this will make it easier/faster to perform joins/group by's, and has the added benefit that the table can be used for anoter process
+- when one table is large and the other is small
+    - instead of the usual partitioning of each larger table into records
+        - each executor operates on:
+            - a partition of the large table
+            - a copy of the smaller table
+                - this is known as broadcasting
+                - no shuffling is done in this stage
