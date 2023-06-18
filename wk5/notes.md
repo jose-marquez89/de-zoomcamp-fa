@@ -127,3 +127,9 @@
             - a copy of the smaller table
                 - this is known as broadcasting
                 - no shuffling is done in this stage
+
+## Connecting to Google Cloud Storage
+We ran the command below to upload our parquet folder to gcs:
+```shell
+gsutil -m cp -r pq/ gs://dtc_data_lake_de-zc-i/pq
+```
