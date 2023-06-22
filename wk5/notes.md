@@ -133,3 +133,45 @@ We ran the command below to upload our parquet folder to gcs:
 ```shell
 gsutil -m cp -r pq/ gs://dtc_data_lake_de-zc-i/pq
 ```
+
+## Creating a Local Spark Cluster
+Documentation for starting a cluster manually is [here](https://spark.apache.org/docs/latest/spark-standalone.html)
+
+- go to your `$SPARK_HOME` directory
+- run the `sbin/start-master.sh` script
+- the spark cluster should be running at port 8080
+- you can connect your spark session to the running spark cluster by setting the `.master()` method argument to the spark cluster URL like so
+    - `.master("spark://jose-MacBookPro:7077")`
+    - this could be a locally hosted cluster (as above) or a cluster hosted at another URL
+        - this is a networking thing
+- if you see this message, you haven't set up any workers:
+    - "WARN TaskSchedulerImpl: Initial job has not accepted any resources; check your cluster UI to ensure that workers are registered and have sufficient resources"
+    - you can start one or more workers and connect them to the master with `sbin/start-worker.sh <master-spark-URL>`
+
+### Spark-Submit
+Spark-submit is a script that comes with spark that you can use to submit jobs to spark clusters
+- hard coding the master (the main cluster) is not very practical if you want to use a script with something like airflow for example
+
+What it looks like in a simple local example for PySpark (Java and Scala will have their own versions, see the [spark docs](https://spark.apache.org/docs/latest/submitting-applications.html))
+```shell
+CR_URL="spark://jose-MacBookPro:7077"
+
+spark-submit \
+    --master "${CR_URL}" \
+    local_spark.py \
+        --input_green=data/pq/green/2020/*/ \
+        --input_yellow=data/pq/yellow/2020/*/ \
+        --output=data/report-2020
+```
+
+
+### Other stuff
+- convert your notebooks to scripts in the terminal using `juypter nbconvert to=script <notebook_name.ipynb>`
+- if a notebook or script cannot access any workers, it could be that you are taking them up with another script
+    - you can kill the offending applications on the spark cluster UI
+- checking dates of files in the terminal
+    - `ls -lg` will produce permissions and dates (maybe other stuff too?)
+- if you've started your spark cluster manually, when you're done with spark, you need to stop the master and workers
+    - in your Spark executables directory
+    - `./sbin/stop-worker.sh`
+    - `./sbin/stop-master.sh`
