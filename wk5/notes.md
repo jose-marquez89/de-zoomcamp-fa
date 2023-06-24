@@ -212,3 +212,23 @@ gcloud dataproc jobs submit pyspark \
         --input_yellow=gs://dtc_data_lake_de-zc-i/pq/yellow/2021/*/ \
         --output=gs://dtc_data_lake_de-zc-i/report-2021/ 
 ```
+
+## Connecting Spark to BigQuery
+- change the last line of the *local_spark.py* file to write to a bigquery table instead of a parquet file in GCS
+
+The CLI command will change just slightly (the `--output` flag will have a big query table instead of a gcs path and we'll use a different python file)
+```shell
+gcloud dataproc jobs submit pyspark \
+    --cluster=de-zc-cluster \
+    --region=europe-west6 \
+    --jars=gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar \
+    gs://dtc_data_lake_de-zc-i/code/gcs_spark_big_query.py \
+    -- \
+    	--input_green=gs://dtc_data_lake_de-zc-i/pq/green/2020/*/ \
+        --input_yellow=gs://dtc_data_lake_de-zc-i/pq/yellow/2020/*/ \
+        --output=trips_data_all.report_2020 
+```
+
+### Recap
+What did we do here?
+- we used a dataproc (gcp managed hadoop cluster) to process spark jobs that resulted in either of a write to parquet files in gcs or a table in big query
