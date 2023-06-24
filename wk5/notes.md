@@ -164,7 +164,6 @@ spark-submit \
         --output=data/report-2020
 ```
 
-
 ### Other stuff
 - convert your notebooks to scripts in the terminal using `juypter nbconvert to=script <notebook_name.ipynb>`
 - if a notebook or script cannot access any workers, it could be that you are taking them up with another script
@@ -175,3 +174,41 @@ spark-submit \
     - in your Spark executables directory
     - `./sbin/stop-worker.sh`
     - `./sbin/stop-master.sh`
+
+## Setting up a Dataproc Cluster
+- a dataprocessing cluster
+    - "managed hadoop clusters in gcp"
+- to start, search 'dataproc' in GCP
+    - you'll need to enable the dataproc API
+    - once you're done, create a cluster in your desired region
+    - the cluster type will only matter in a real project
+        - for the mean time, a single node cluster is fine (0 workers)
+
+### Submitting a job
+- go to the cluster
+- choose a job type (hadoop, spark, pyspark, etc)
+- upload your code to somewhere in your data lake
+    - from code dir: `gsutil cp local_spark.py gs://dtc_data_lake_de-zc-i/code/`
+
+While this is a convenient way to submit a one-off job, this isn't the path you would take if you were trying to use an orchestration tool or the command line. In that case you would probably want to work with a REST api. This is described in more detail below:
+
+### Using an API to submit a job
+- you can submit a job via three different methods
+    - REST API
+    - GCP SDK
+    - Web UI
+    - see more at the [docs](https://cloud.google.com/dataproc/docs/guides/submit-job#dataproc-submit-job-gcloud)
+- this is more helpful when using the command line or an orchestration tool like Airflow
+- ideally you have different roles for your orchestration tool but here we kept things simple and just used our main service account
+
+The equivalent gcloud command (yes you do seem to need the stray `--` for the pyspark job args):
+```shell
+gcloud dataproc jobs submit pyspark \
+    --cluster=de-zc-cluster \
+    --region=europe-west6 \
+    gs://dtc_data_lake_de-zc-i/code/local_spark.py \
+    -- \
+    	--input_green=gs://dtc_data_lake_de-zc-i/pq/green/2021/*/ \
+        --input_yellow=gs://dtc_data_lake_de-zc-i/pq/yellow/2021/*/ \
+        --output=gs://dtc_data_lake_de-zc-i/report-2021/ 
+```
