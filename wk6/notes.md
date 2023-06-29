@@ -78,4 +78,15 @@ Key Questions
     - this is done via Kafka connect
 
 ## Confluent Cloud
-TODO: this section
+What we did in this section:
+- created a kafka cluster
+- created a topic
+    - 2 partitions
+    - 1 day retention time with infinite storage (?)
+- started datagen dummy connector with JSON orders
+    - this will be turned off after a few hundred messages to avoid running out of credits
+
+
+## Producers and Consumers
+TODO: add link to new Java project
+This section used Java. See the repo for this section on [GitHub](#)
