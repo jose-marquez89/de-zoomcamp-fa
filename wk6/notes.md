@@ -88,5 +88,4 @@ What we did in this section:
 
 
 ## Producers and Consumers
-TODO: add link to new Java project
-This section used Java. See the repo for this section on [GitHub](#)
+This section used Java. See the repo for this section on [GitHub](https://github.com/jose-marquez89/kafka-dez-tutorial/tree/main)
