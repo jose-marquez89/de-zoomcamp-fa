@@ -89,3 +89,59 @@ What we did in this section:
 
 ## Producers and Consumers
 This section used Java. See the repo for this section on [GitHub](https://github.com/jose-marquez89/kafka-dez-tutorial/tree/main)
+
+## Kafka configurations
+- what is a kafka cluster?
+    - just machines or nodes talking to eachother that are running kafka
+    - kafka used to use zookeeper for topics, now it uses its own internals
+- topic is just a sequence of events coming in
+    - rides contains everything pertaining to rides
+    - there's a key and a value and a timestamp
+        - these three things form a message
+- how does kafka provide reliablility?
+    - replication: a "leader" node will write a message in the logs that is submitted by the producer
+        - this message is replicated in a "follower" node
+    - if the "leader" node goes down, producers and consumers will not know the difference, but the "follower" node becomes a leader and starts replicating to another available node
+
+### Retention
+- if you set a day-long retention, any message in a log older than one day will get deleted from nodes (all nodes? would make sense)
+
+### Partitioning
+- a topic will be split between the amount of nodes you partition by
+- there is still replication going on between the utilized nodes
+- in the partitioning case, multiple nodes will be communicating with consumers and producers
+- you still have the "follower"/"leader" behavior for replication, but it is done with partitions instead of whole topics/logs being replicated across nodes
+- consumers can only read from one partition at a time
+    - theoretically, if you had a large processing requirement or delay, you could use multiple consumers to spread out the time and "multithread" the reading of messages
+        - kafka doesn't operate this way however
+        - we use multiple partitions instead
+- consumer group ids help kafka understand that a group of consumers are going to be independently reading individual paritions
+    - kafka scales out and provides reliability in the case of partitioning using the knowledge that there are say (partitions)+1 consumers
+    - in the event that a consumer goes down, kafka will redirect partition messages to the spare consumer
+        - it's a good idea to have an idle consumer
+
+### Offsets
+This is how kafka determines that a consumer has already read a particular message and it should now read a different one
+- there is an internal kafka topic called `__consumer_offset`
+    - stores consumer.group.id, topic, partition, offset
+    - kafka stores each consumer's "commit" data for message consumption
+    - this is kind of like the way CDC is stored in databases
+- if a consumer dies and is restarted, kafka will be able to start the consumer back off on the right foot (message) based on data in `__consumer_offset`
+- `AUTO.OFFSET.RESET`
+    - you have latest and earliest
+    - this helps kafka know how to react when a new consumer group has been attached to it 
+    - when you set your `AUTO.OFFSET.RESET` to earliest, kafka assumes that you have a different consumer group id (than a group id which is set to read the latest message)
+    - at this point, the new group id consumer will be able to read from say, message 0
+
+### ACK.ALL
+- this example is with a replication factor of 2 in mind
+- a producer will publish a message to a node and this will then be replicated to a second node (replication factor 2)
+- there are levels of ack.all
+    - 0: fire and forget, the producer just fires the message and doesn't really care if it was delivered or not (like UDP as opposed to TCP, I think that's correct)
+    - 1: publishing to leader node must be successful
+    - all: leaders are written but followers are also for sure written
+        - this means that even if the leader fails, the follower will have the message
+        - this is one of the slowest ways to publish because if there is failure, it means you will have to re-publish the message (because no nodes received it)
+        - it's a guarantee that messages will always be delivered
+- your choice on this will depend on the importance of the data
+- you can check out more configuration from the [kafka docs](https://kafka.apache.org/documentation/#configuration)
